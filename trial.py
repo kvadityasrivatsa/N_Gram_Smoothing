@@ -1,17 +1,24 @@
 import re
 import numpy as np
-from nltk.tokenize import sent_tokenize, word_tokenize 
+from nltk.tokenize import word_tokenize 
 
-text = open('corpus.txt', 'r').read()
+
+text = open('mini_corpus.txt', 'r').read()
 text = re.sub('[^A-Za-z]+', ' ', text)
 text = text.lower()
 tokens = word_tokenize(text)
+
 uni_list = []
 bi_list = []
 tri_list = []
+quad_list = []
+
 uni_count = {}
 bi_count = {}
 tri_count = {}
+quad_count = {}
+
+d = 0.75
 
 #1A
 for i in range(len(tokens)):
@@ -58,11 +65,92 @@ for tri in tri_list:
 # print(tri_count)
 # print("//////////////////")
 
+#4A
+for i in range(int(len(tokens))-3):
+	quad = tokens[i]+" "+tokens[i+1]+" "+tokens[i+2]+" "+tokens[i+3]
+	quad_list.append(quad)
+	i+=4
+
+#4B
+for quad in quad_list:
+	if(quad not in quad_count):
+		quad_count[quad]=1
+	else:
+		quad_count[quad]+=1
+# print(quad_count)
+# print("//////////////////")
+
+def count(string):
+	n = len(string.split()) 
+	if(n==3):
+		return tri_count[string]
+	elif(n==2):
+		return bi_count[string]
+	elif(n==1):
+		return uni_count[string]
+	else:
+		return 0
+
+def countck(string):
+	n = len(string.split()) 
+	val = 0
+	if(n==3):
+		for x in uni_count:
+			if(x+" "+string in quad_count):
+				val+=1
+		return val
+	elif(n==2):
+		for x in uni_count:
+			if(x+" "+string in tri_count):
+				val+=1
+		return val
+	elif(n==1):
+		for x in uni_count:
+			if(x+" "+string in bi_count):
+				val+=1
+		return val
+	else:
+		return 0
+
+def lam(string):
+	n = len(string.split())
+	num = 0
+	den = 0
+	for w in uni_count:
+		if(countck(string+" "+w)>0):
+			num+=1
+	print("num=",num)
+	for v in uni_count:
+		den+=countck(string+" "+v)
+	print("den=",den)
+	if(num==0 or den==0):
+		print("WTF")
+		return 0
+	else:
+		return d*float(num)/float(den)
+
+def max(x,y):
+	if(x>y):
+		return x
+	else:
+		return y
 
 
-# print(sorted(unigram_count))
+# print(sorted(uni_count))
 
-# for w in sorted(unigram_count, key=unigram_count.get, reverse=True):
-#   print(w, unigram_count[w])
+# for w in sorted(uni_count, key=uni_count.get, reverse=True):
+#   print(w, uni_count[w])
+
+# for w in sorted(bi_count, key=bi_count.get, reverse=True):
+#   print(w, bi_count[w])
+
+# for w in sorted(tri_count, key=tri_count.get, reverse=True):
+#   print(w, tri_count[w])
+
+# for w in sorted(quad_count, key=quad_count.get, reverse=True):
+#   print(w, quad_count[w])
 
 
+# print(count("boy"))
+# print(countck("boy"))
+print(lam("of the"))
