@@ -1,6 +1,5 @@
 import re
 import sys
-import numpy as np
 from nltk.tokenize import word_tokenize 
 
 # print(sys.argv)
@@ -32,7 +31,6 @@ d3 = 0.75
 for i in range(len(tokens)):
 	uni = tokens[i]
 	uni_list.append(uni)
-	i+=1
 
 #1B
 for uni in uni_list:
@@ -47,7 +45,6 @@ for uni in uni_list:
 for i in range(int(len(tokens))-1):
 	bi = tokens[i]+" "+tokens[i+1]
 	bi_list.append(bi)
-	i+=2
 
 #2B
 for bi in bi_list:
@@ -62,7 +59,6 @@ for bi in bi_list:
 for i in range(int(len(tokens))-2):
 	tri = tokens[i]+" "+tokens[i+1]+" "+tokens[i+2]
 	tri_list.append(tri)
-	i+=3
 
 #3B
 for tri in tri_list:
@@ -134,7 +130,7 @@ def lam(string, gram):
 	n = len(string.split())
 	num = 0
 	den = 0
-	# print(string)
+
 	for w in uni_count:
 		if(string!=""):
 			if(countck(string+" "+w)>0):
@@ -142,7 +138,6 @@ def lam(string, gram):
 		else:
 			if(countck(w)>0):
 				num+=1
-	# print("num=",num)
 
 	if(string!=""):
 		for v in uni_count:
