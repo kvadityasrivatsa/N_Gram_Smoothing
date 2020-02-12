@@ -82,14 +82,18 @@ for quad in quad_list:
 
 def count(string):
 	n = len(string.split()) 
+	val = 0
 	if(n==3):
-		return tri_count[string]
+		if(string in tri_count):
+			val = tri_count[string]
 	elif(n==2):
-		return bi_count[string]
+		if(string in bi_count):
+			val = bi_count[string]
 	elif(n==1):
-		return uni_count[string]
-	else:
-		return 0
+		if(string in uni_count):
+			val = uni_count[string]
+	return val
+
 
 def countck(string):
 	n = len(string.split()) 
@@ -135,6 +139,94 @@ def max(x,y):
 	else:
 		return y
 
+def tri_pkn_prim(string):
+	string_list = string.split()
+	word = string_list[2]
+	context = string_list[0]+" "+string_list[1]
+	num1 = max(count(string)-d,0)
+	den1 = 0
+	for v in uni_count:
+		den1+=count(context+" "+v)
+	if(num1==0 or den1==0):
+		return lam(context)*bi_pkn_aux(string_list[1]+" "+string_list[2])
+	else:
+		return float(num1)/float(den1) + lam(context)*bi_pkn_aux(string_list[1]+" "+string_list[2])
+
+def bi_pkn_aux(string):
+	string_list = string.split()
+	word = string_list[1]
+	context = string_list[0]
+	num1 = max(countck(string)-d,0)
+	den1 = 0
+	for v in uni_count:
+		den1+=countck(context+" "+v)
+	if(num1==0 or den1==0):
+		return lam(context)*uni_pkn_aux(string_list[1])
+	else:
+		return float(num1)/float(den1) + lam(context)*uni_pkn_aux(string_list[1])
+
+def uni_pkn_aux(string):	# string : single word
+	word = string
+	num1 = max(countck(string)-d,0)
+	den1 = 0
+	for v in uni_count:
+		den1+=countck(v)
+	if(num1==0 or den1==0):
+		return lam("")/len(uni_count)
+	else: 
+		return float(num1)/float(den1) + lam("")/len(uni_count) # len(uni_count) = V
+
+def bi_pkn_prim(string):
+	string_list = string.split()
+	word = string_list[1]
+	context = string_list[0]
+	num1 = max(count(string)-d,0)
+	den1 = 0
+	for v in uni_count:
+		den1+=count(context+" "+v)
+	if(num1==0 or den1==0):
+		return lam(context)*uni_pkn_aux(string_list[1])
+	else:
+		return float(num1)/float(den1) + lam(context)*uni_pkn_aux(string_list[1])
+
+def uni_pkn_prim(string):	# string : single word
+	word = string
+	num1 = max(count(string)-d,0)
+	den1 = 0
+	for v in uni_count:
+		den1+=count(v)
+	if(num1==0 or den1==0):
+		return lam("")/len(uni_count)
+	else: 
+		return float(num1)/float(den1) + lam("")/len(uni_count) # len(uni_count) = V
+
+
+def trigram_main_func(string):	# string is a sentence
+	string_list = string.split()
+	prod = 1
+	for i in range(len(string_list)-2):
+		aux_prob = tri_pkn_prim(string_list[i]+" "+string_list[i+1]+" "+string_list[i+2])	# window size = 3
+		prod*=aux_prob
+	i+=1
+	return prod
+
+def bigram_main_func(string):	# string is a sentence
+	string_list = string.split()
+	prod = 1
+	for i in range(len(string_list)-1):
+		aux_prob = bi_pkn_prim(string_list[i]+" "+string_list[i+1])	# window size = 2
+		prod*=aux_prob
+	i+=1
+	return prod
+
+def unigram_main_func(string):	# string is a sentence
+	string_list = string.split()
+	prod = 1
+	for i in range(len(string_list)):
+		aux_prob = tri_pkn_prim(string_list[i])	# window size = 1
+		prod*=aux_prob
+	i+=1
+	return prod
 
 # print(sorted(uni_count))
 
@@ -153,4 +245,11 @@ def max(x,y):
 
 # print(count("boy"))
 # print(countck("boy"))
-print(lam("of the"))
+# print("MAKE")
+# print(lam("make"))
+
+# print(tri_pkn_prim("the procreant earth"))
+
+print(trigram_main_func("delight alone or in the"))
+print(bigram_main_func("delight alone or in the"))
+print(unigram_main_func("delight alone or in the"))
