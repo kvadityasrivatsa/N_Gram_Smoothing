@@ -3,7 +3,7 @@ import sys
 import numpy as np
 from nltk.tokenize import word_tokenize 
 
-print(sys.argv)
+# print(sys.argv)
 
 n_gram = int(sys.argv[1])
 smoothing_type = str(sys.argv[2])
@@ -24,7 +24,9 @@ bi_count = {}
 tri_count = {}
 quad_count = {}
 
-d = 0.75
+d1 = 0.75
+d2 = 0.75
+d3 = 0.75
 
 #1A
 for i in range(len(tokens)):
@@ -122,11 +124,17 @@ def countck(string):
 	else:
 		return 0
 
-def lam(string):
+def lam(string, gram):
+	if(gram==1):
+		d = d1
+	elif(gram==2):
+		d = d2
+	elif(gram==3):
+		d = d3
 	n = len(string.split())
 	num = 0
 	den = 0
-	print(string)
+	# print(string)
 	for w in uni_count:
 		if(string!=""):
 			if(countck(string+" "+w)>0):
@@ -134,7 +142,7 @@ def lam(string):
 		else:
 			if(countck(w)>0):
 				num+=1
-	print("num=",num)
+	# print("num=",num)
 
 	if(string!=""):
 		for v in uni_count:
@@ -142,14 +150,15 @@ def lam(string):
 	else:
 		for v in uni_count:
 			den+=countck(v)		
-	print("den=",den)
+	# print("den=",den)
 
 	if(num==0 and den!=0):
-		# print("WTF")
 		return d/float(den)
-	elif(den==0):
-		print("WTF")
-		return 0
+	elif(den==0 and num!=0):
+		# print("WTF")
+		return d*float(num)
+	elif(num==0 and den==0):
+		return d
 	else:
 		return d*float(num)/float(den)
 
@@ -163,63 +172,63 @@ def tri_pkn_prim(string):
 	string_list = string.split()
 	word = string_list[2]
 	context = string_list[0]+" "+string_list[1]
-	num1 = max(count(string)-d,0)
+	num1 = max(count(string)-d3,0)
 	den1 = 0
 	for v in uni_count:
 		den1+=count(context+" "+v)
 	if(num1==0 or den1==0):
-		return lam(context)*bi_pkn_aux(string_list[1]+" "+string_list[2])
+		return lam(context,3)*bi_pkn_aux(string_list[1]+" "+string_list[2])
 	else:
-		return float(num1)/float(den1) + lam(context)*bi_pkn_aux(string_list[1]+" "+string_list[2])
+		return float(num1)/float(den1) + lam(context,3)*bi_pkn_aux(string_list[1]+" "+string_list[2])
 
 def bi_pkn_aux(string):
 	string_list = string.split()
 	word = string_list[1]
 	context = string_list[0]
-	num1 = max(countck(string)-d,0)
+	num1 = max(countck(string)-d2,0)
 	den1 = 0
 	for v in uni_count:
 		den1+=countck(context+" "+v)
 	if(num1==0 or den1==0):
-		return lam(context)*uni_pkn_aux(string_list[1])
+		return lam(context,2)*uni_pkn_aux(string_list[1])
 	else:
-		return float(num1)/float(den1) + lam(context)*uni_pkn_aux(string_list[1])
+		return float(num1)/float(den1) + lam(context,2)*uni_pkn_aux(string_list[1])
 
 def uni_pkn_aux(string):	# string : single word
 	word = string
-	num1 = max(countck(string)-d,0)
+	num1 = max(countck(string)-d1,0)
 	den1 = 0
 	for v in uni_count:
 		den1+=countck(v)
 	if(num1==0 or den1==0):
-		return lam("")/len(uni_count)
+		return lam("",1)/len(uni_count)
 	else: 
-		return float(num1)/float(den1) + lam("")/len(uni_count) # len(uni_count) = V
+		return float(num1)/float(den1) + lam("",1)/len(uni_count) # len(uni_count) = V
 
 def bi_pkn_prim(string):
 	string_list = string.split()
 	word = string_list[1]
 	context = string_list[0]
-	num1 = max(count(string)-d,0)
+	num1 = max(count(string)-d2,0)
 	den1 = 0
 	for v in uni_count:
 		den1+=count(context+" "+v)
 	if(num1==0 or den1==0):
-		return lam(context)*uni_pkn_aux(string_list[1])
+		return lam(context,2)*uni_pkn_aux(string_list[1])
 	else:
-		return float(num1)/float(den1) + lam(context)*uni_pkn_aux(string_list[1])
+		return float(num1)/float(den1) + lam(context,2)*uni_pkn_aux(string_list[1])
 
 def uni_pkn_prim(string):	# string : single word
 	word = string
-	num1 = max(count(string)-d,0)
+	num1 = max(count(string)-d1,0)
 	den1 = 0
 	for v in uni_count:
 		den1+=count(v)
 	if(num1==0 or den1==0):
-		print("num1 & den1 =0")
-		return lam("")/len(uni_count)
+		# print("num1 & den1 =0")
+		return lam("",1)/len(uni_count)
 	else: 
-		return float(num1)/float(den1) + lam("")/len(uni_count) # len(uni_count) = V
+		return float(num1)/float(den1) + lam("",1)/len(uni_count) # len(uni_count) = V
 
 
 def trigram_main_func(string):	# string is a sentence
@@ -228,7 +237,6 @@ def trigram_main_func(string):	# string is a sentence
 	for i in range(len(string_list)-2):
 		aux_prob = tri_pkn_prim(string_list[i]+" "+string_list[i+1]+" "+string_list[i+2])	# window size = 3
 		prod*=aux_prob
-	i+=1
 	return prod
 
 def bigram_main_func(string):	# string is a sentence
@@ -237,7 +245,6 @@ def bigram_main_func(string):	# string is a sentence
 	for i in range(len(string_list)-1):
 		aux_prob = bi_pkn_prim(string_list[i]+" "+string_list[i+1])	# window size = 2
 		prod*=aux_prob
-	i+=1
 	return prod
 
 def unigram_main_func(string):	# string is a sentence
@@ -246,7 +253,6 @@ def unigram_main_func(string):	# string is a sentence
 	for i in range(len(string_list)):
 		aux_prob = uni_pkn_prim(string_list[i])	# window size = 1
 		prod*=aux_prob
-	i+=1
 	return prod
 
 # print(sorted(uni_count))
@@ -262,12 +268,6 @@ def unigram_main_func(string):	# string is a sentence
 
 # for w in sorted(quad_count, key=quad_count.get, reverse=True):
 #   print(w, quad_count[w])
-
-
-# print(count("boy"))
-# print(countck("boy"))
-# print("MAKE")
-# print(lam("make"))
 
 # print(tri_pkn_prim("the procreant earth"))
 
