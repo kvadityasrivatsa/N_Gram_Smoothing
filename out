@@ -1,50 +1,69 @@
+urge and
 num= 1
-den= 1
-num= 7
-den= 7
-num= 0
-den= 0
-WTF
-num= 1
-den= 1
-num= 48
-den= 66
-num= 0
-den= 0
-WTF
+den= 2
+and
+num= 209
+den= 267
+
+num= 1834
+den= 5193
+and urge
 num= 2
-den= 3
-num= 42
-den= 76
-num= 0
-den= 0
-WTF
-num= 20
-den= 20
-num= 333
-den= 448
-num= 0
-den= 0
-WTF
+den= 2
+urge
+num= 5
+den= 6
+
+num= 1834
+den= 5193
+urge and
 num= 1
-den= 1
-num= 1
-den= 1
-num= 0
-den= 0
-WTF
-num= 1
-den= 1
-num= 114
-den= 199
-num= 0
-den= 0
-WTF
-num= 54
-den= 65
-num= 333
-den= 448
-num= 0
-den= 0
-WTF
-4.867862769389039e-07
+den= 2
+and
+num= 209
+den= 267
+
+num= 1834
+den= 5193
+0.11792251614804568
+urge
+num= 5
+den= 6
+
+num= 1834
+den= 5193
+and
+num= 209
+den= 267
+
+num= 1834
+den= 5193
+urge
+num= 5
+den= 6
+
+num= 1834
+den= 5193
+and
+num= 209
+den= 267
+
+num= 1834
+den= 5193
+1.3543754319560108e-06
+
+num= 1834
+den= 5193
+
+num= 1834
+den= 5193
+
+num= 1834
+den= 5193
+
+num= 1834
+den= 5193
+
+num= 1834
+den= 5193
+1.574366004581792e-12

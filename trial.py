@@ -120,14 +120,28 @@ def lam(string):
 	n = len(string.split())
 	num = 0
 	den = 0
+	print(string)
 	for w in uni_count:
-		if(countck(string+" "+w)>0):
-			num+=1
+		if(string!=""):
+			if(countck(string+" "+w)>0):
+				num+=1
+		else:
+			if(countck(w)>0):
+				num+=1
 	print("num=",num)
-	for v in uni_count:
-		den+=countck(string+" "+v)
+
+	if(string!=""):
+		for v in uni_count:
+			den+=countck(string+" "+v)
+	else:
+		for v in uni_count:
+			den+=countck(v)		
 	print("den=",den)
-	if(num==0 or den==0):
+
+	if(num==0 and den!=0):
+		# print("WTF")
+		return d/float(den)
+	elif(den==0):
 		print("WTF")
 		return 0
 	else:
@@ -196,6 +210,7 @@ def uni_pkn_prim(string):	# string : single word
 	for v in uni_count:
 		den1+=count(v)
 	if(num1==0 or den1==0):
+		print("num1 & den1 =0")
 		return lam("")/len(uni_count)
 	else: 
 		return float(num1)/float(den1) + lam("")/len(uni_count) # len(uni_count) = V
@@ -223,7 +238,7 @@ def unigram_main_func(string):	# string is a sentence
 	string_list = string.split()
 	prod = 1
 	for i in range(len(string_list)):
-		aux_prob = tri_pkn_prim(string_list[i])	# window size = 1
+		aux_prob = uni_pkn_prim(string_list[i])	# window size = 1
 		prod*=aux_prob
 	i+=1
 	return prod
@@ -250,6 +265,9 @@ def unigram_main_func(string):	# string is a sentence
 
 # print(tri_pkn_prim("the procreant earth"))
 
-print(trigram_main_func("delight alone or in the"))
-print(bigram_main_func("delight alone or in the"))
-print(unigram_main_func("delight alone or in the"))
+print(trigram_main_func("urge and urge and urge"))
+print(bigram_main_func("urge and urge and urge"))
+print(unigram_main_func("urge and urge and urge"))
+
+# text = re.sub('[^A-Za-z]+', ' ', text)
+# text = text.lower()
