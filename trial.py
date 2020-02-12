@@ -1,9 +1,15 @@
 import re
+import sys
 import numpy as np
 from nltk.tokenize import word_tokenize 
 
+print(sys.argv)
 
-text = open('mini_corpus.txt', 'r').read()
+n_gram = int(sys.argv[1])
+smoothing_type = str(sys.argv[2])
+path = str(sys.argv[3])
+
+text = open(path, 'r').read()
 text = re.sub('[^A-Za-z]+', ' ', text)
 text = text.lower()
 tokens = word_tokenize(text)
@@ -265,9 +271,20 @@ def unigram_main_func(string):	# string is a sentence
 
 # print(tri_pkn_prim("the procreant earth"))
 
-print(trigram_main_func("urge and urge and urge"))
-print(bigram_main_func("urge and urge and urge"))
-print(unigram_main_func("urge and urge and urge"))
+# print(trigram_main_func("urge and urge and urge"))
+# print(bigram_main_func("urge and urge and urge"))
+# print(unigram_main_func("urge and urge and urge"))
 
 # text = re.sub('[^A-Za-z]+', ' ', text)
 # text = text.lower()
+
+sent = input("input sentence:")
+sent = re.sub('[^A-Za-z]+', ' ', sent)
+sent = sent.lower()
+
+if(n_gram==3):
+	print(trigram_main_func(sent))
+elif(n_gram==2):
+	print(bigram_main_func(sent))
+elif(n_gram==1):
+	print(unigram_main_func(sent))
