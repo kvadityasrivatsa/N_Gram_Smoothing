@@ -23,9 +23,9 @@ bi_count = {}
 tri_count = {}
 quad_count = {}
 
-d1 = 0.75
+d1 = 0.5
 d2 = 0.75
-d3 = 0.75
+d3 = 0.9
 
 #1A
 for i in range(len(tokens)):
@@ -148,12 +148,15 @@ def lam(string, gram):
 	# print("den=",den)
 
 	if(num==0 and den!=0):
-		return d/float(den)
+		# return d/float(den)
+		return 0
 	elif(den==0 and num!=0):
 		# print("WTF")
-		return d*float(num)
+		# return d*float(num)
+		return 0
 	elif(num==0 and den==0):
-		return d
+		# return d
+		return 0
 	else:
 		return d*float(num)/float(den)
 

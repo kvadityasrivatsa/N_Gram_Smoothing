@@ -79,12 +79,14 @@ def Pwb3(string):
 	T = 0
 	for w in uni_count:
 		if(context+" "+w in tri_count):
-			T=+1
+			T+=1
 	N = 0
 	for v in uni_count:
 		if(context+" "+v in tri_count):
 			N+=tri_count[context+" "+v]
 	Z = V - T
+
+	print("Pwb3: string=",string,"T=",T,"N=",N,"Z=",Z,"CNT=",count(string))
 
 	if(T==0 and N==0):
 		return 0
@@ -100,12 +102,14 @@ def Pwb2(string):
 	T = 0
 	for w in uni_count:
 		if(context+" "+w in bi_count):
-			T=+1
+			T+=1
 	N = 0
 	for v in uni_count:
 		if(context+" "+v in bi_count):
 			N+=bi_count[context+" "+v]
 	Z = V - T
+
+	print("Pwb2: string=",string,"T=",T,"N=",N,"Z=",Z,"CNT=",count(string))
 
 	if(T==0 and N==0):
 		return 0
@@ -150,6 +154,7 @@ def Pfwb3(string):
 	word = vect[2]
 	context = vect[0] + " " + vect[1]
 	L = lam(context)
+	# print(L,Pwb3(string),1-L,Pfwb2(vect[1]+" "+vect[2]))
 	return L*Pwb3(string) + (1-L)*Pfwb2(vect[1]+" "+vect[2])
 
 def Pfwb2(string):
@@ -157,6 +162,7 @@ def Pfwb2(string):
 	word = vect[1]
 	context = vect[0]
 	L = lam(context)
+	print(L,Pwb2(string),1-L,Pwb1(vect[1]))
 	return L*Pwb2(string) + (1-L)*Pwb1(vect[1])
 
 def WB_final(string,gram):	# string is sentence 
@@ -180,4 +186,10 @@ def WB_final(string,gram):	# string is sentence
 	
 	return prod
 
-print(WB_final("i am a man",1))
+# print(WB_final("i see life",3))
+
+sent = input("input sentence:")
+sent = re.sub('[^A-Za-z]+', ' ', sent)
+sent = sent.lower()
+
+print(WB_final(sent,2))
