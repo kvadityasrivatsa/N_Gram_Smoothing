@@ -2,10 +2,12 @@ import re
 import sys
 from nltk.tokenize import word_tokenize 
 
-text = open("corpus.txt", 'r').read()
-text = re.sub('[^A-Za-z]+', ' ', text)
-text = text.lower()
-tokens = word_tokenize(text)
+def fetchNclean(path):
+	text = open(path, 'r').read()
+	text = re.sub('[^A-Za-z]+', ' ', text)
+	text = text.lower()
+	global tokens
+	tokens = word_tokenize(text)
 
 uni_list = []
 bi_list = []
@@ -17,49 +19,66 @@ bi_count = {}
 tri_count = {}
 quad_count = {}
 
-#1A
-for i in range(len(tokens)):
-	uni = tokens[i]
-	uni_list.append(uni)
+gram = 3
 
-#1B
-for uni in uni_list:
-	if(uni not in uni_count):
-		uni_count[uni]=1
-	else:
-		uni_count[uni]+=1
-# print(uni_count)
-# print("//////////////////")
+def prep_ds(n):
 
-#2A
-for i in range(int(len(tokens))-1):
-	bi = tokens[i]+" "+tokens[i+1]
-	bi_list.append(bi)
+	global tokens
+	global uni_list
+	global uni_count
+	global bi_list
+	global bi_count
+	global tri_list
+	global tri_count
+	global V
 
-#2B
-for bi in bi_list:
-	if(bi not in bi_count):
-		bi_count[bi]=1
-	else:
-		bi_count[bi]+=1
-# print(bi_count)
-# print("//////////////////")
+	global gram
+	gram = n
 
-#3A
-for i in range(int(len(tokens))-2):
-	tri = tokens[i]+" "+tokens[i+1]+" "+tokens[i+2]
-	tri_list.append(tri)
+	#1A
+	for i in range(len(tokens)):
+		uni = tokens[i]
+		uni_list.append(uni)
 
-#3B
-for tri in tri_list:
-	if(tri not in tri_count):
-		tri_count[tri]=1
-	else:
-		tri_count[tri]+=1
-print(tri_count)
-print("//////////////////")
+	#1B
+	for uni in uni_list:
+		if(uni not in uni_count):
+			uni_count[uni]=1
+		else:
+			uni_count[uni]+=1
+	# print(uni_count)
+	# print("//////////////////")
 
-V = len(uni_count)
+	#2A
+	for i in range(int(len(tokens))-1):
+		bi = tokens[i]+" "+tokens[i+1]
+		bi_list.append(bi)
+
+	#2B
+	for bi in bi_list:
+		if(bi not in bi_count):
+			bi_count[bi]=1
+		else:
+			bi_count[bi]+=1
+	# print(bi_count)
+	# print("//////////////////")
+
+	#3A
+	for i in range(int(len(tokens))-2):
+		tri = tokens[i]+" "+tokens[i+1]+" "+tokens[i+2]
+		tri_list.append(tri)
+
+	#3B
+	for tri in tri_list:
+		if(tri not in tri_count):
+			tri_count[tri]=1
+		else:
+			tri_count[tri]+=1
+	print(tri_count)
+	print("//////////////////")
+
+	V = len(uni_count)
+
 
 def count(string):
 	n = len(string.split()) 
@@ -186,10 +205,9 @@ def WB_final(string,gram):	# string is sentence
 	
 	return prod
 
-# print(WB_final("i see life",3))
+def run():
+	sent = input("input sentence:")
+	sent = re.sub('[^A-Za-z]+', ' ', sent)
+	sent = sent.lower()
 
-sent = input("input sentence:")
-sent = re.sub('[^A-Za-z]+', ' ', sent)
-sent = sent.lower()
-
-print(WB_final(sent,2))
+	print(WB_final(sent,gram))
